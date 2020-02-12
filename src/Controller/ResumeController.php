@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\ResumeRepository;
 
-
 class ResumeController extends AbstractController
 {
     private $repository;
@@ -18,7 +17,7 @@ class ResumeController extends AbstractController
     }
 
     /**
-    * @Route("/resumes", name="get_all_resumes", methods={"GET"})
+    * @Route("/api/resumes", name="get_all_resumes", methods={"GET"})
     */
     public function all(): JsonResponse
     {

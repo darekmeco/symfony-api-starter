@@ -18,11 +18,6 @@ class User implements UserInterface
     private $id;
 
     /**
-    * @ORM\Column(type="string", unique=true, nullable=true)
-    */
-    private $apiToken;
-
-    /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
@@ -37,6 +32,16 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+
+    public function __construct()
+    {
+        $this->isActive = true;
+    }
 
     public function getId(): ?int
     {
