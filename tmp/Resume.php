@@ -1,15 +1,34 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\ResumeRepository")
+ */
 class Resume
 {
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
     private $id;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $firstname;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $lastname;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $position;
 
     public function getId(): ?int
@@ -49,6 +68,7 @@ class Resume
     public function setPosition(string $position): self
     {
         $this->position = $position;
+
         return $this;
     }
 }
