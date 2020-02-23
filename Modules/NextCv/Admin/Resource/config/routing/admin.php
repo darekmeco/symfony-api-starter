@@ -1,14 +1,14 @@
 <?php
 use App\Controller\ResumeController;
+use App\Modules\NextCv\Admin\Controller\AdminController;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 return function (RoutingConfigurator $routes) {
-    $routes->add('login_check', '/login_check')
-    ->methods(['POST']);
-
-    $routes->add('get_all_resumes', '/api/resumes')
+    $routes->add('admin_index', '/index')
     ->controller([ResumeController::class, 'all'])
     ->methods(['GET', 'HEAD']);
 
-    $routes->import("../Modules/NextCv/Admin/Resource/config/routing.php");
+    $routes->add('admin_index2', '/index2/{ja}')
+    ->controller([AdminController::class, 'all'])
+    ->methods(['GET', 'HEAD']);
 };
