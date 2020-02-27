@@ -16,8 +16,10 @@ return function (ContainerConfigurator $configurator) {
 
     $services->load('App\\Controller\\', '../src/Controller')
         ->tag('controller.service_arguments');
-        
+
     $services->load('NextCv\\Modules\\Admin\\Controller\\', '../Modules/NextCv/Admin/Controller');
+    $services->load('NextCv\\Modules\\Admin\\', '../Modules/NextCv/Admin')
+    ->exclude('Resume');
 
     //->tag('controller.service_arguments');
 };
