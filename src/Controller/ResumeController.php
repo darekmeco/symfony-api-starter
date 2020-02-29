@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use NextCv\Modules\Admin\AdminModule;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,14 +12,12 @@ use App\Repository\ResumeRepository;
 class ResumeController extends AbstractController
 {
     private $repository;
+    private $admin;
     public function __construct(ResumeRepository $repository)
     {
         $this->repository = $repository;
     }
 
-    /**
-    * @Route("/api/resumes", name="get_all_resumes", methods={"GET"})
-    */
     public function all(): JsonResponse
     {
         $resumes = $this->repository->findAll();
