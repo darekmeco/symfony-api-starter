@@ -25,6 +25,8 @@ return function (ContainerConfigurator $configurator) {
     $services->load('NextCv\\Modules\\Admin\\', '../Modules/NextCv/Admin/*')
         ->exclude('../Modules/NextCv/Admin/Resource');
 
+    $services->load('NextCv\\Modules\\Resume\\', '../Modules/NextCv/Resume/*')
+        ->exclude('../Modules/NextCv/Resume/Resource');
 
     $services->set(AdminModule::class)
         ->configurator(ref(\NextCv\Modules\Admin\Config\AdminConfigurator::class));

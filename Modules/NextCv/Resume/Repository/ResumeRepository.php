@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\Repository;
+namespace NextCv\Modules\Resume\Repository;
 
-use App\Entity\Resume;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use NextCv\Modules\Resume\Entity\Resume;
 
 /**
  * @method Resume|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,6 +19,16 @@ class ResumeRepository extends ServiceEntityRepository
         parent::__construct($registry, Resume::class);
     }
 
+
+    public function findAllDql()
+    {
+        $dql = <<<DQL
+            SELECT resume FROM NextCv\Modules\Resume\Entity\Resume resume
+            DQL;
+
+        $query = $this->getEntityManager()->createQuery($dql);
+        return $query->getResult();
+    }
 
     // /**
     //  * @return Resume[] Returns an array of Resume objects
