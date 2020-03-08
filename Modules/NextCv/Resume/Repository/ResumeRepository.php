@@ -5,6 +5,7 @@ namespace NextCv\Modules\Resume\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use NextCv\Modules\Resume\Entity\Resume;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -18,12 +19,14 @@ class ResumeRepository extends ServiceEntityRepository
 {
     private $manager;
     private $serializer;
+    private $paginator;
 
-    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager, SerializerInterface $serializer)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager, SerializerInterface $serializer, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Resume::class);
         $this->manager = $manager;
         $this->serializer = $serializer;
+        $this->paginator = $paginator;
     }
 
     /**
@@ -35,8 +38,24 @@ class ResumeRepository extends ServiceEntityRepository
             SELECT resume FROM NextCv\Modules\Resume\Entity\Resume resume
             DQL;
 
-        $query = $this->getEntityManager()->createQuery($dql);
+        $query = $this->manager->createQuery($dql);
         return $query->getResult();
+    }
+
+    public function findAll()
+    {
+        $query = $this->createQueryBuilder('r')
+            ->setFirstResult(0)
+            ->setMaxResults(10)
+            ->getQuery();
+
+        //dump($pagination);
+        return $this->paginator->paginate(
+            $query, /* query NOT result */
+            2, /*page number*/
+            10 /*limit per page*/
+        );
+
     }
 
     public function store(array $data)
