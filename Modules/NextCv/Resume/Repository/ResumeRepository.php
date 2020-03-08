@@ -4,7 +4,9 @@ namespace NextCv\Modules\Resume\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use NextCv\Modules\Resume\Entity\Resume;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @method Resume|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,12 +16,19 @@ use NextCv\Modules\Resume\Entity\Resume;
  */
 class ResumeRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $manager;
+    private $serializer;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager, SerializerInterface $serializer)
     {
         parent::__construct($registry, Resume::class);
+        $this->manager = $manager;
+        $this->serializer = $serializer;
     }
 
-
+    /**
+     * @return Resume[] Returns an array of Resume objects
+     */
     public function findAllDql()
     {
         $dql = <<<DQL
@@ -28,6 +37,13 @@ class ResumeRepository extends ServiceEntityRepository
 
         $query = $this->getEntityManager()->createQuery($dql);
         return $query->getResult();
+    }
+
+    public function store(array $data)
+    {
+        $resume = $this->serializer->denormalize($data, Resume::class);
+        $this->manager->persist($resume);
+        $this->manager->flush();
     }
 
     // /**

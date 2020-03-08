@@ -12,6 +12,10 @@ return function (RoutingConfigurator $routes) {
         ->controller([ResumeController::class, 'allDql'])
         ->methods(['GET', 'HEAD']);
 
+    $routes->add('api_store', '/store')
+        ->controller([ResumeController::class, 'store'])
+        ->methods(['POST', 'HEAD']);
+
     $routes->add('api_find', '/{id}')
         ->controller([ResumeController::class, 'find'])
         ->methods(['GET', 'HEAD']);

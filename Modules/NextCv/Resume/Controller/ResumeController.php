@@ -4,47 +4,41 @@ namespace NextCv\Modules\Resume\Controller;
 
 use NextCv\Modules\Resume\Repository\ResumeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 class ResumeController extends AbstractController
 {
     private $repository;
-    private $admin;
+    private $serializer;
+    private $normalizer;
 
-    public function __construct(ResumeRepository $repository)
+    public function __construct(ResumeRepository $repository, SerializerInterface $serializer, ObjectNormalizer $normalizer)
     {
         $this->repository = $repository;
+        $this->serializer = $serializer;
+        $this->normalizer = $normalizer;
     }
 
     public function all(): JsonResponse
     {
         $resumes = $this->repository->findAll();
-        $data = [];
-
-        foreach ($resumes as $resume) {
-            $data[] = [
-                'id' => $resume->getId(),
-                'firstName' => $resume->getFirstName(),
-                'lastName' => $resume->getLastName(),
-                'position' => $resume->getPosition()
-            ];
-        }
-
-        return new JsonResponse($data, Response::HTTP_OK);
+        return new JsonResponse($this->serializer->normalize($resumes), Response::HTTP_OK);
     }
 
     public function allDql(): JsonResponse
     {
         $resumes = $this->repository->findAllDql();
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
+        return new JsonResponse($this->serializer->normalize($resumes), Response::HTTP_OK);
+    }
 
-        return new JsonResponse($serializer->serialize($resumes, 'json'), Response::HTTP_OK);
+    public function store(Request $request)
+    {
+        $resume = $this->repository->store($request->request->all());
+        return new JsonResponse($resume, Response::HTTP_OK);
     }
 }
